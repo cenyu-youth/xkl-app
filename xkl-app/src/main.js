@@ -6,10 +6,45 @@ import store from './store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
+
 Vue.use(VueAxios, axios)
 
-import { Button } from 'vant';
-Vue.use(Button);
+import {
+  Button,
+  Toast,
+  Icon,
+  Field,
+  Grid,
+  GridItem,
+  Tab,
+  Tabs,
+  RadioGroup,
+  Radio,
+  Uploader,
+  Switch,
+  Dialog,
+  Collapse,
+  CollapseItem
+ } from 'vant';
+Vue
+  .use(Button)
+  .use(Toast)
+  .use(Icon)
+  .use(Field)
+  .use(Grid)
+  .use(GridItem)
+  .use(Tab)
+  .use(Tabs)
+  .use(RadioGroup)
+  .use(Radio)
+  .use(Uploader)
+  .use(Switch)
+  .use(Dialog)
+  .use(Collapse)
+  .use(CollapseItem)
 
 import 'lib-flexible/flexible'
 

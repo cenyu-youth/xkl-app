@@ -1,0 +1,102 @@
+<template>
+  <div class="capital_details">
+    <NavBar title="资金明细" :isTrueArrow="true" rtTtit="提现记录" rtPath="tixiandetail"/>
+
+    <van-tabs v-model="tab_a_active" title-active-color="#1092cd" color="transparent">
+      <van-tab title="推广费"></van-tab>
+      <van-tab title="保证金"></van-tab>
+    </van-tabs>
+
+    <van-tabs v-model="tab_b_active" title-active-color="#1092cd" color="transparent" background="#ddd">
+      <van-tab title="全部"></van-tab>
+      <van-tab title="收入"></van-tab>
+      <van-tab title="支出"></van-tab>
+    </van-tabs>
+
+    <div class="item_box">
+      <div class="item">
+        <div class="tp_box">
+          <div class="date_box">2021-04-24 11:34:06</div>
+          <div class="detail_box">
+            <div class="money">0.271</div>
+            <div class="e_money">余额：5078</div>
+          </div>
+        </div>
+        <div class="ct">下下级买手订单，确认完成返推广费，订单号：187972550783770624</div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+
+import NavBar from '@/components/NavBar.vue';
+
+export default {
+  name: 'CapitalDetails',
+  components: {
+    NavBar
+  },
+  data(){
+    return{
+      tab_a_active:0,
+      tab_b_active:0
+    }
+  },
+}
+</script>
+
+<style lang="less" scoped>
+
+   .capital_details{
+      width: 100%;
+      min-height: 100vh;
+      background-color: #fff;
+
+      .item_box{
+        padding: 0 10px;
+        background-color: #fff;
+
+        .item{
+          width: 100%;
+          padding: 10px 0;
+          border-bottom: 1px solid #ccc;
+          .tp_box{
+            height: 30px;
+            line-height: 30px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+
+            .date_box{
+              color: #8f8f94;
+              font-size: 14px;
+            }
+
+            .detail_box{
+              font-size: 16px;
+              display: flex;
+              justify-content: space-between;
+
+              .money{
+                color: #00abef;
+                margin-right: 8px;
+              }
+              .e_money{
+                font-size: 14px;
+                color: #333;
+              }
+            }
+          }
+          .ct{
+            color: #8f8f94;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 25px;
+          }
+        }
+      }
+   }
+
+</style>
