@@ -3,11 +3,11 @@
     <NavBar title="仙客来" :isShowMsg="true"/>
 
     <div class="banner">
-      <div class="item bor">
+      <div class="item bor" @click="goState({name: 'capitaldetails'})">
         <div class="txt">推广费收益</div>
         <div class="money">628.592</div>
       </div>
-      <div class="item">
+      <div class="item"  @click="goState({name: 'capitaldetails'})">
         <div class="txt">保证金总计</div>
         <div class="money">628.592</div>
       </div>
@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="task_box">
+    <div class="task_box" @click="goState({name: 'extension'})">
       <div class="task_title">活动任务</div>
 
       <div class="task_wrap">
@@ -65,13 +65,13 @@
       <div class="share_title">分享-赚收益</div>
 
       <div class="share_wrapper">
-        <div class="share_card">
+        <div class="share_card" @click="goState({name: 'share'})">
           <div class="share_txt">分享海报</div>
           <div class="share_txt">越分享越赚钱</div>
           <img src="../assets/help/index-qrCode.png" alt="" class="share_icon">
         </div>
 
-        <div class="share_card bg_color">
+        <div class="share_card bg_color" @click="goState({name: 'extension'})">
           <div class="share_txt">分享链接</div>
           <div class="share_txt">越分享越赚钱</div>
           <img src="../assets/help/index-link.png" alt="" class="share_icon">
@@ -93,6 +93,11 @@ export default {
   components: {
     NavBar,
     TabBar
+  },
+  methods:{
+    goState(o){
+      this.$router.push(o)
+    }
   }
 }
 </script>
@@ -249,7 +254,7 @@ export default {
               right: 5px;
             }
           }
-          
+
           .bg_color{
                 background: -webkit-linear-gradient(left top,#72a3ec,#3c73c4);
           }

@@ -120,6 +120,11 @@ const routes = [
     name: 'help',
     component: () => import(/* webpackChunkName: "help" */ '../views/Help.vue')
   },
+  {
+    path: '/tixianapply',
+    name: 'tixianapply',
+    component: () => import(/* webpackChunkName: "tixianapply" */ '../views/TixianApply.vue')
+  },
 ]
 
 const router = new VueRouter({

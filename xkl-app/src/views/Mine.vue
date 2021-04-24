@@ -44,7 +44,7 @@
          <div class="num">587.396</div>
          <div>总结单量</div>
        </div>
-       <div class="bar_item bar_icon">
+       <div class="bar_item bar_icon" @click="goState(({name: 'tixianapply'}))">
          <div><img src="../assets/mine/home-coin.svg" alt=""></div>
          <div>我要提现</div>
        </div>
