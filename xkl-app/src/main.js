@@ -27,7 +27,8 @@ import {
   Switch,
   Dialog,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Overlay
  } from 'vant';
 Vue
   .use(Button)
@@ -45,6 +46,7 @@ Vue
   .use(Dialog)
   .use(Collapse)
   .use(CollapseItem)
+  .use(Overlay)
 
 import 'lib-flexible/flexible'
 

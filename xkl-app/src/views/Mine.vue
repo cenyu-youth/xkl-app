@@ -165,8 +165,8 @@ export default {
         "user-id": this.userInfo.user_id,
         "user-token": this.userInfo.user_token
       },
-      method: 'GET',
-      url: 'http://106.12.220.193/Webapp/home/pushUserInfo',
+      method: 'POST',
+      url: 'http://106.12.220.193/webapp/home/myInfo',
       params: {}
     }).then(res => {
       console.info('请求个人信息',res.data)

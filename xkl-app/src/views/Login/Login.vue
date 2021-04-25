@@ -43,9 +43,13 @@
          utils: new Util(this)
        }
      },
+     computed: mapState([
+         'userInfo',
+         'user'
+     ]),
      methods: {
 
-       ...mapMutations(['changeUserInfo']),
+       ...mapMutations(['changeUserInfo','changeUser']),
 
        goState(o){
          this.$router.push(o)
@@ -84,11 +88,27 @@
           if(res.data.code == 0){
             this.$toast.success('登陆成功')
 
-            console.info(res.data)
-
             this.changeUserInfo(res.data.data.user_info)
 
-            this.$router.push({name: 'home'})
+            this.axios({
+              headers:{
+                "user-id": res.data.data.user_info.user_id,
+                "user-token": res.data.data.user_info.user_token
+              },
+              method: 'GET',
+              url: 'http://106.12.220.193/Webapp/home/pushUserInfo',
+              params: {}
+            }).then(result => {
+              console.info('请求个人信息',result.data)
+              if(result.data.code == 0){
+                this.changeUser(result.data.data);
+                this.$router.push({name: 'home'})
+              }
+            }).catch(err => {
+              console.info(err)
+            })
+
+            console.info(res.data)
           }else if(res.data.data.jumpUrl){
             window.location.href = res.data.data.jumpUrl;
           }else{

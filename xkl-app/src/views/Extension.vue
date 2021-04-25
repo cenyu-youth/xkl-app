@@ -15,7 +15,6 @@
       <van-button @click="goState({name: 'share'})" type="primary" class="share_btn" size="large">分享给好友</van-button>
     </div>
 
-    <TabBar :active="0"/>
   </div>
 </template>
 
