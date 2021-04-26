@@ -90,23 +90,15 @@
 
             this.changeUserInfo(res.data.data.user_info)
 
-            this.axios({
-              headers:{
-                "user-id": res.data.data.user_info.user_id,
-                "user-token": res.data.data.user_info.user_token
-              },
-              method: 'GET',
-              url: 'http://106.12.220.193/Webapp/home/pushUserInfo',
-              params: {}
-            }).then(result => {
-              console.info('请求个人信息',result.data)
-              if(result.data.code == 0){
-                this.changeUser(result.data.data);
-                this.$router.push({name: 'home'})
-              }
-            }).catch(err => {
-              console.info(err)
+            let cookieT = JSON.stringify({
+              user_id: res.data.data.user_info.user_id,
+              user_token: res.data.data.user_info.user_token,
             })
+
+            this.$cookies.set("userData",cookieT,"1m")
+
+            this.reqUserInfo(res.data)
+
 
             console.info(res.data)
           }else if(res.data.data.jumpUrl){
@@ -115,6 +107,26 @@
             this.$toast.fail(res.data.msg)
           }
         });
+       },
+
+       reqUserInfo(o){
+         this.axios({
+           headers:{
+             "user-id": o.data.user_info.user_id,
+             "user-token": o.data.user_info.user_token
+           },
+           method: 'GET',
+           url: 'http://106.12.220.193/Webapp/home/pushUserInfo',
+           params: {}
+         }).then(result => {
+           console.info('请求个人信息',result.data)
+           if(result.data.code == 0){
+             this.changeUser(result.data.data);
+             this.$router.push({name: 'home'})
+           }
+         }).catch(err => {
+           console.info(err)
+         })
        }
      }
    }

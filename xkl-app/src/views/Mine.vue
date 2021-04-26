@@ -29,15 +29,15 @@
     <!-- 分栏 1 -->
      <div class="bar_lan">
        <div class="bar_item" @click="goState({name: 'capitaldetails'})">
-         <div class="num">587.396</div>
+         <div class="num">{{userData.user_info.amount}}</div>
          <div>推广费余额</div>
        </div>
        <div class="bar_item" @click="goState({name: 'capitaldetails'})">
-         <div class="num">587.396</div>
+         <div class="num">{{userData.user_info.commission}}</div>
          <div>累计收益</div>
        </div>
        <div class="bar_item" @click="goState({name: 'tixiandetail'})">
-         <div class="num">587.396</div>
+         <div class="num">{{userData.forcash_count ? userData.forcash_count : 0}}</div>
          <div>提现中</div>
        </div>
        <div class="bar_item line" @click="goState({name: 'endtask'})">
@@ -152,7 +152,36 @@ export default {
           name: ''
         },
 
-      ]
+      ],
+
+      userData:{
+        "user_info":{
+            "user_id":"", // 用户ID
+            "level":"",
+            "username":"", // 用户名
+            "real_name":"",
+            "sex":"",
+            "invitation_code":"", // 邀请码
+            "invitation_code_end_time":"",
+            "status":"",
+            "id_status":"",
+            "id_remark":"",
+            "share_status":"",
+            "amount":"", // 账户余额
+            "frozen_amount":"", //
+            "commission":"", //  累计收益
+            "id_hold_photo":"",
+            "id_front_photo":"",
+            "id_other_photo":"",
+            "id_status_desc":"" // 身份证
+        },
+         "order_count_list":{},
+        "forcash_count":0, // 提现中
+        "top_notice_info":{   // 公告弹框内容 （注：没有内容的时候不需要弹出）
+            "title":"",
+            "content":""
+        }
+      },
     }
   },
   computed: mapState([
@@ -160,6 +189,13 @@ export default {
       'user'
   ]),
   created(){
+
+    this.$toast.loading({
+      message: '数据加载中...',
+      forbidClick: true,
+      duration:0
+    });
+
     this.axios({
       headers:{
         "user-id": this.userInfo.user_id,
@@ -168,12 +204,22 @@ export default {
       method: 'POST',
       url: 'http://106.12.220.193/webapp/home/myInfo',
       params: {}
-    }).then(res => {
-      console.info('请求个人信息',res.data)
-      if(res.data.code == 0){
-        this.changeUser(res.data.data)
+    }).then(result => {
+
+      this.$toast.clear()
+
+       let res = result.data
+
+      console.info('请求个人页的信息=====>',res.data)
+      if(res.code == 0){
+        this.changeUser(res.data.user_info)
+
+        this.userData = res.data
+      }else if(res.code == 9999){
+        this.$router.push({name:'login'})
       }
     }).catch(err => {
+      this.$toast.clear()
       console.info(err)
     })
   },

@@ -69,11 +69,9 @@
 
 
     <van-overlay :show="showOver" @click="showOver = false" />
-    <div v-if="showOver" class="dialog_box">
+    <div v-show="showOver" class="dialog_box">
       <div class="dialog_title">{{pageData.top_notice_info ? pageData.top_notice_info.title : ''}}</div>
-      <pre class="dialog_ct">
-        "<p><strong><span style="font-size: 24px; color: rgb(255, 0, 0);">最近不按任务要求做单的全部拉黑。</span></strong></p><p><strong><span style="font-size: 24px; color: rgb(255, 0, 0);">不能<span style="font-size: 24px; color: rgb(146, 208, 80);">秒拍，淘客！拍立淘</span>！</span></strong></p><p><span style="color: rgb(146, 208, 80);"><strong><span style="font-size: 24px;">花呗和信用卡也别用</span></strong></span><strong><span style="font-size: 24px; color: rgb(255, 0, 0);">！！</span></strong></p><p><strong><span style="font-size: 24px; color: rgb(255, 0, 0);">不按关键词搜索任务的！！</span></strong></p><p><strong><span style="font-size: 24px; color: rgb(255, 0, 0);">别用<span style="font-size: 24px; color: rgb(146, 208, 80);">首单礼金！！</span></span></strong></p><p><strong><span style="font-size: 24px; color: rgb(255, 0, 0);">搜索店铺名做任务的！</span></strong></p><p><strong><span style="font-size: 24px; color: rgb(255, 0, 0);">不按要求做单一律撤销订单！！！</span></strong></p><p><strong><span style="font-size: 24px; color: rgb(255, 0, 0);"></span></strong></p><p><span style="color: rgb(0, 0, 0);"><strong>我们这边提现是今天提现，明天23点前汇到。</strong></span></p><p><span style="color: rgb(0, 0, 0);"><strong>提现不到的，</strong></span></p><p><span style="color: rgb(0, 0, 0);"><strong>1.看下卡号是不是错了，错了要改。</strong></span></p><p><span style="color: rgb(0, 0, 0);"><strong>2.不要看短信，要去银行APP看流水。</strong></span></p><p><span style="color: rgb(0, 0, 0);"><strong>3.都正常还提现拒绝的换张卡提现。</strong></span></p><p><span style="color: rgb(0, 0, 0);"><strong>平台正常运营请放心！</strong></span></p><p><strong><span style="font-size: 24px; color: rgb(255, 0, 0);"><br/></span></strong><br/></p>"
-      </pre>
+      <pre class="dialog_ct" ref="wrapper"></pre>
 
       <div class="btns">
         <van-button class="btn" type="primary" @click="showOver = false">确定</van-button>
@@ -107,7 +105,8 @@ export default {
         top_notice_info:{
           title:'',
           content:''
-        }
+        },
+        txt:''
       },
       showOver: false
     }
@@ -116,6 +115,9 @@ export default {
       'userInfo',
       'user'
   ]),
+  mounted(){
+      // this.$refs.wrapper.innerHTML = this.txt
+  },
   methods:{
     goState(o){
       this.$router.push(o)
@@ -136,8 +138,15 @@ export default {
 
         if(res.code == 0){
           this.pageData = res.data;
+
+          this.txt = res.data.top_notice_info.content;
+
           setTimeout(() => {
-            this.showOver = true
+            if(res.data.top_notice_info.content){
+              this.showOver = true
+            }
+
+            this.$refs.wrapper.innerHTML = this.txt
           },200)
 
         }else if(res.code == 9999){

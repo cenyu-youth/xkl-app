@@ -3,14 +3,15 @@
     <NavBar title="资金明细" :isTrueArrow="true" rtTtit="提现记录" rtPath="tixiandetail"/>
 
     <van-tabs v-model="tab_a_active" title-active-color="#1092cd" color="transparent">
-      <van-tab title="推广费"></van-tab>
-      <van-tab title="保证金"></van-tab>
+      <van-tab title="可用金币"></van-tab>
+      <van-tab title="提现中"></van-tab>
     </van-tabs>
 
     <van-tabs v-model="tab_b_active" title-active-color="#1092cd" color="transparent" background="#ddd">
       <van-tab title="全部"></van-tab>
-      <van-tab title="收入"></van-tab>
-      <van-tab title="支出"></van-tab>
+      <van-tab title="本金"></van-tab>
+      <van-tab title="佣金"></van-tab>
+      <van-tab title="推荐"></van-tab>
     </van-tabs>
 
     <div class="item_box">

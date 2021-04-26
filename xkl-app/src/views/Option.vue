@@ -76,7 +76,7 @@ export default {
         .then(() => {
           try{
             this.delUser();
-
+            this.$cookies.remove('userData') 
 
 
             this.$toast('退出成功')
