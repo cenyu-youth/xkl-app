@@ -55,9 +55,12 @@
            params: {}
          }).then(result => {
            // console.info('请求个人信息1231322',result.data)
-           if(result.data.code == 0){
-             this.changeUser(result.data.data);
-           }else if(res.data.code == 9999){
+
+           let res = result.data
+
+           if(res.code == 0){
+             this.changeUser(res.data);
+           }else if(res.code == 9999){
              this.$cookies.remove('userData')
              this.$router.push({name: 'login'})
            }

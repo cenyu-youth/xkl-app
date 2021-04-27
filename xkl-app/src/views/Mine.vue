@@ -41,7 +41,7 @@
          <div>提现中</div>
        </div>
        <div class="bar_item line" @click="goState({name: 'endtask'})">
-         <div class="num">587.396</div>
+         <div class="num">{{userData.order_count_list["6"] ? userData.order_count_list["6"].count : 0}}</div>
          <div>总结单量</div>
        </div>
        <div class="bar_item bar_icon" @click="goState(({name: 'tixianapply'}))">
@@ -53,22 +53,22 @@
     <!-- 分栏 2 -->
      <div class="bar_lan">
        <div class="bar_item" @click="goState({name: 'tasklist', query:{idx: 1}})">
-         <div class="num">0</div>
+         <div class="num">{{userData.order_count_list["2"] ? userData.order_count_list["2"].count : 0}}</div>
          <div>待操作</div>
        </div>
        <div class="bar_item" @click="goState({name: 'tasklist', query:{idx: 2}})">
-         <div class="num">0</div>
+         <div class="num">{{userData.order_count_list["3"] ? userData.order_count_list["3"].count : 0}}</div>
          <div>待返款</div>
        </div>
-       <div class="bar_item"  @click="goState({name: 'tasklist', query:{idx: 3}})">
-         <div class="num">0</div>
+       <div class="bar_item"  @click="goState({name: 'tasklist', query:{idx: 4}})">
+         <div class="num">{{userData.order_count_list["4"] ? userData.order_count_list["4"].count : 0}}</div>
          <div>待评价</div>
        </div>
-       <div class="bar_item line" @click="goState({name: 'tasklist', query:{idx: 4}})">
-         <div class="num">0</div>
-         <div>待确认</div>
+       <div class="bar_item line" @click="goState({name: 'tasklist', query:{idx: 3}})">
+         <div class="num">{{userData.order_count_list["10"] ? userData.order_count_list["10"].count : 0}}</div>
+         <div>金额异常</div>
        </div>
-       <div class="bar_item bar_icon" @click="goState({name: 'tasklist', query:{idx: 1}})">
+       <div class="bar_item bar_icon" @click="goState({name: 'tasklist', query:{idx: 0}})">
          <div><img src="../assets/mine/home-all-task.png" alt=""></div>
          <div>全部任务</div>
        </div>

@@ -100,7 +100,7 @@
             this.reqUserInfo(res.data)
 
 
-            console.info(res.data)
+            // console.info(res.data)
           }else if(res.data.data.jumpUrl){
             window.location.href = res.data.data.jumpUrl;
           }else{
@@ -119,7 +119,7 @@
            url: 'http://106.12.220.193/Webapp/home/pushUserInfo',
            params: {}
          }).then(result => {
-           console.info('请求个人信息',result.data)
+           // console.info('请求个人信息',result.data)
            if(result.data.code == 0){
              this.changeUser(result.data.data);
              this.$router.push({name: 'home'})
