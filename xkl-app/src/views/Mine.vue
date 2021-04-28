@@ -40,7 +40,7 @@
          <div class="num">{{userData.forcash_count ? userData.forcash_count : 0}}</div>
          <div>提现中</div>
        </div>
-       <div class="bar_item line" @click="goState({name: 'endtask'})">
+       <div class="bar_item line" @click="goState({name: 'tasklist', query:{idx:0}})">
          <div class="num">{{userData.order_count_list["6"] ? userData.order_count_list["6"].count : 0}}</div>
          <div>总结单量</div>
        </div>

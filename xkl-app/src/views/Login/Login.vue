@@ -40,7 +40,7 @@
        return{
          phone:18159303017,
          pwd:'a123456',
-         utils: new Util(this)
+         utils: new Util(this),
        }
      },
      computed: mapState([

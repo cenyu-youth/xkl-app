@@ -14,7 +14,7 @@
       <van-tab title="推荐"></van-tab>
     </van-tabs>
 
-    <div class="item_box">
+    <!-- <div class="item_box">
       <div class="item" v-for="(v,i) in list" :key="i">
         <div class="tp_box">
           <div class="date_box">{{v.add_time}}</div>
@@ -24,6 +24,22 @@
           </div>
         </div>
         <div class="ct">下下级买手订单，确认完成返推广费，订单号：187972550783770624</div>
+      </div>
+    </div> -->
+
+    <div class="m_box">
+      <div class="m_item" v-for="(v,i) in list" :key="i">
+        <div class="m_lt">
+          <div class="m_tp">
+            <div class="m_date">{{v.add_time}}</div>
+            <div class="m_status">{{v.status == 1 ? '待审核' : v.status == 2 ? '已发放' : '已拒绝'}}</div>
+          </div>
+          <div class="m_ct">
+            订单编号{{v.order_unique}},
+            {{v.remark}}
+          </div>
+        </div>
+        <div class="m_rt">+{{v.order_amount}}</div>
       </div>
     </div>
 
@@ -159,6 +175,44 @@ export default {
             font-size: 18px;
             font-weight: 700;
             line-height: 25px;
+          }
+        }
+      }
+
+      .m_box{
+        width: 100%;
+        .m_item{
+          padding: 5px;
+          display: flex;align-items: center;
+          justify-content: space-between;
+
+          .m_tp{
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            color: #bbb;
+
+
+            .m_status{
+                  display: inline-block;
+                  padding: 0 0.1rem;
+                  border-radius: 3px;
+                  color: #fff !important;
+                  background-color: #808080 !important;
+                  margin-left: 5px;
+                  color: #fff !important;
+                  background-color: #ff4163 !important;
+            }
+          }
+
+          .m_ct{
+            font-style: 15px;
+            color: #808080;
+          }
+
+          .m_rt{
+                color: #419cff;
+                font-size: 20px;
           }
         }
       }
