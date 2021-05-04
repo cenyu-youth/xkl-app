@@ -10,7 +10,11 @@
         <div class="subtitle">其他业务问题，点击联系在线客服</div>
         <div class="help_user">
           <img src="../assets/option/index-qq.png" class="user_icon" alt="">
-          <div class="user">客服QQ：{{kefu_qq}}</div>
+          <!-- <div class="user" @click="jump">客服QQ：{{kefu_qq}}</div> -->
+          <a :href="jupmUrl">客服QQ：{{kefu_qq}}</a>
+        </div>
+        <div class="help_user">
+          <a :href="`tel:+${kefu_mobile}`">手机号码：{{kefu_mobile}}</a>
         </div>
       </div>
     </div>
@@ -92,7 +96,9 @@ export default {
       activeName:0,
       helpActive:0,
       kefu_qq:'',
-      list:[]
+      list:[],
+      jupmUrl:'',
+      kefu_mobile: ''
     }
   },
   created(){
@@ -114,6 +120,12 @@ export default {
           this.kefu_qq = res.data.kefu_qq;
 
           this.list = res.data.qa_list
+
+          this.jupmUrl = res.data.qq_jumpUrl
+
+          this.kefu_mobile = res.data.kefu_mobile
+
+
         }else if(res.code == 9999){
           this.$router.push({name:'login'})
         }else{
@@ -126,6 +138,11 @@ export default {
   methods:{
 
     ...mapMutations(['changeUserInfo','changeUser']),
+
+    jump(){
+      window.location.href = this.jupmUrl
+    },
+
     changeHelp(idx){
       this.helpActive = idx
     }
@@ -166,7 +183,9 @@ export default {
             display: flex;
             font-size: 18px;
             line-height: 25px;
-
+            a{
+              color: #fff;
+            }
             .user_icon{
               width: 25px;
             }

@@ -68,7 +68,7 @@
     </div>
 
 
-    <van-overlay :show="showOver" @click="showOver = false" />
+    <van-overlay :show="showOver" @click="showOver = false" z-index="99999"/>
     <div v-show="showOver" class="dialog_box">
       <div class="dialog_title">{{pageData.top_notice_info ? pageData.top_notice_info.title : ''}}</div>
       <pre class="dialog_ct" ref="wrapper"></pre>
@@ -125,6 +125,7 @@ export default {
     goState(o){
       this.$router.push(o)
     },
+
     reqShareInit(){
       this.axios({
         headers:{
@@ -139,7 +140,7 @@ export default {
 
          let res = result.data
 
-        console.info('报错账号信息=====>',res)
+        console.info('报错账号信息=====>',result)
         if(res.code == 0){
           this.shareData = res.data
         }else if(res.code == 9999){
@@ -395,11 +396,11 @@ export default {
         box-sizing: border-box;
         -webkit-border-radius: 10px;
         border-radius: 10px;
-        position: absolute;
+        position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        z-index: 9;
+        z-index: 99999;
         .dialog_title{
           text-align: center;
           font-weight: 700;

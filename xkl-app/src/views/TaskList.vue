@@ -87,7 +87,7 @@ export default {
         {
           txt:'待追评',
 
-          type:10
+          type:30
         },
         {
           txt:'待评价',
@@ -120,7 +120,7 @@ export default {
       listData:[],
       reqType:[
         0 ,
-        2 , 3, 10, 4 ,5 ,6 ,30 ,40
+        2 , 3, 30, 4 ,5 ,6 ,30 ,40
       ]
     }
   },

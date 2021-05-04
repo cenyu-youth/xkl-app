@@ -84,7 +84,7 @@
     <!-- 由下角人工客服 -->
     <img @click="goState({name:'help'})" class="rg_kefu" src="../assets/tabbar/home-customer-service.png" alt="">
 
-    <van-overlay :show="showOver" @click="showOver = false" />
+    <van-overlay :show="showOver" @click="showOver = false" z-index="99999"/>
     <div v-show="showOver" class="dialog_box">
       <div class="dialog_title">{{userData.top_notice_info ? userData.top_notice_info.title : ''}}</div>
       <pre class="dialog_ct" ref="wrapper">{{userData.top_notice_info.content}}</pre>
@@ -120,7 +120,7 @@ export default {
     return{
       utils: new Utils(this),
 
-      sysAppIds:'阿随后大会盛大设计的敬爱的睡觉时',
+      sysAppIds:'',
 
       gridData:[
         {
@@ -418,11 +418,11 @@ export default {
       -webkit-border-radius: 10px;
       border-radius: 10px;
 
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      z-index: 9;
+      z-index: 99999;
 
       .dialog_title{
         text-align: center;
