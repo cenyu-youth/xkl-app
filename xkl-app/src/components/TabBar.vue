@@ -6,7 +6,7 @@
    </div>
 
    <!-- 中间的球状物 -->
-   <div class="ball_btn">接单</div>
+   <div class="ball_btn" @click="goState({name:'receivingorders'})">接单</div>
   </div>
 </template>
 

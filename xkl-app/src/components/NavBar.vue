@@ -5,7 +5,7 @@
 
     <div class="rt-boxs">
       <img class="bans" v-if="isShowOpa" src="../assets/tabbar/bans.png"  @click="goState({name: 'option'})">
-      <van-icon size="24px" v-if="isShowMsg" name="chat-o" @click="goState({name: 'msgpage'})"/>
+      <!-- <van-icon size="24px" v-if="isShowMsg" name="chat-o" @click="goState({name: 'msgpage'})"/> -->
     </div>
 
     <div class="ct_tit" v-if="rtTtit" @click="goState({name: rtPath})">{{rtTtit}}</div>

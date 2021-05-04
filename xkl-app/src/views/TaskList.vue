@@ -41,11 +41,12 @@
             <div class="jianxi">|</div>
             <div class="type">{{v.keyword_mame}}</div>
           </div>
-          <van-button type="info" class="btn">详情</van-button>
+          <van-button type="info" class="btn" @click="goState({name: 'taskdetail', query:{id:v.sign}})">详情</van-button>
         </div>
       </div>
     </div>
 
+    <div class="noList" v-if="listData.length < 1">没有更多数据了</div>
   </div>
 </template>
 
@@ -84,7 +85,7 @@ export default {
           type:3
         },
         {
-          txt:'金额异常',
+          txt:'待追评',
 
           type:10
         },
@@ -133,6 +134,10 @@ export default {
   methods: {
 
     ...mapMutations(['changeUserInfo','changeUser']),
+
+    goState(o){
+      this.$router.push(o)
+    },
 
     changeTab(idx){
       this.active = idx;
@@ -209,11 +214,12 @@ export default {
           width: 100%;
           color: #303133;
           font-size: 14px;
-          box-shadow: 0 0 16px 0 rgb(0 0 0 / 6%);
+          // box-shadow: 0 0 16px 0 rgb(0 0 0 / 6%);
           border-radius: 20px;
           margin-top: 14px;
           border-bottom: 1px solid #f0eff5;
           background: #ffffff;
+          overflow: hidden;
           .task_tp{
             display: flex;
             justify-content: space-between;
@@ -298,6 +304,13 @@ export default {
           }
 
         }
+      }
+
+      .noList{
+        color: #999;
+        line-height: 50px;
+        font-size: 15px;
+        text-align: center;
       }
 
    }

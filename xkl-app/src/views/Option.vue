@@ -11,14 +11,14 @@
       <van-icon color="#ccc" size="30px" name="arrow" />
     </div>
 
-    <div class="bar_box" @click="goState({name: 'changepay'})">
+    <!-- <div class="bar_box" @click="goState({name: 'changepay'})">
       <div class="lt_box">
         <img class="icon" src="../assets/option/setting-changePwd.png" alt="">
         <div class="txt">修改提现密码</div>
       </div>
 
       <van-icon color="#ccc" size="30px" name="arrow" />
-    </div>
+    </div> -->
 
     <div class="bar_box">
       <div class="lt_box">

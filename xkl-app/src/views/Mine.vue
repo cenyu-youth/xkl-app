@@ -1,19 +1,20 @@
 <template>
   <div class="mine">
 
-    <NavBar :isTrueArrow="true" :isShowOpa="true" :isShowMsg="true"/>
+    <NavBar :isShowOpa="true" :isShowMsg="true"/>
 
 
     <!-- 个人信息 -->
 
     <div class="mine_info">
 
-       <img src="../assets/mine/img-no.png" alt="" class="avatar">
+       <img src="../assets/mine/default.png" alt="" class="avatar">
 
        <div class="txt_box">
          <div class="user_box">{{user.username}}</div>
-         <div class="user_box">邀请码 {{user.invitation_code}}
+         <div class="user_box">{{user.share_status == 1 ? '邀请码' + user.invitation_code : '暂无邀请权限'}}
            <span
+            v-if="user.share_status == 1"
             v-clipboard:copy="user.invitation_code"
             v-clipboard:success="onCopy"
             v-clipboard:error="onError">
@@ -22,29 +23,29 @@
         </div>
        </div>
 
-       <img @click="goState({name: 'share'})" src="../assets/mine/home-qrCode.svg" alt="" class="qe_code">
+       <img v-if="user.share_status == 1" @click="goState({name: 'share'})" src="../assets/mine/home-qrCode.svg" alt="" class="qe_code">
 
     </div>
 
     <!-- 分栏 1 -->
      <div class="bar_lan">
-       <div class="bar_item" @click="goState({name: 'capitaldetails'})">
+       <div class="bar_item" @click="goLinkYz({name: 'capitaldetails'})">
          <div class="num">{{userData.user_info.amount}}</div>
          <div>推广费余额</div>
        </div>
-       <div class="bar_item" @click="goState({name: 'capitaldetails'})">
+       <div class="bar_item" @click="goLinkYz({name: 'capitaldetails'})">
          <div class="num">{{userData.user_info.commission}}</div>
          <div>累计收益</div>
        </div>
-       <div class="bar_item" @click="goState({name: 'tixiandetail'})">
+       <div class="bar_item" @click="goLinkYz({name: 'capitaldetails'})">
          <div class="num">{{userData.forcash_count ? userData.forcash_count : 0}}</div>
          <div>提现中</div>
        </div>
-       <div class="bar_item line" @click="goState({name: 'tasklist', query:{idx:0}})">
+       <div class="bar_item line" @click="goLinkYz({name: 'tasklist', query:{idx:0}})">
          <div class="num">{{userData.order_count_list["6"] ? userData.order_count_list["6"].count : 0}}</div>
          <div>总结单量</div>
        </div>
-       <div class="bar_item bar_icon" @click="goState(({name: 'tixianapply'}))">
+       <div class="bar_item bar_icon" @click="goLinkYz(({name: 'tixianapply'}))">
          <div><img src="../assets/mine/home-coin.svg" alt=""></div>
          <div>我要提现</div>
        </div>
@@ -52,36 +53,47 @@
 
     <!-- 分栏 2 -->
      <div class="bar_lan">
-       <div class="bar_item" @click="goState({name: 'tasklist', query:{idx: 1}})">
+       <div class="bar_item" @click="goLinkYz({name: 'tasklist', query:{idx: 1}})">
          <div class="num">{{userData.order_count_list["2"] ? userData.order_count_list["2"].count : 0}}</div>
          <div>待操作</div>
        </div>
-       <div class="bar_item" @click="goState({name: 'tasklist', query:{idx: 2}})">
+       <div class="bar_item" @click="goLinkYz({name: 'tasklist', query:{idx: 2}})">
          <div class="num">{{userData.order_count_list["3"] ? userData.order_count_list["3"].count : 0}}</div>
          <div>待返款</div>
        </div>
-       <div class="bar_item"  @click="goState({name: 'tasklist', query:{idx: 4}})">
+       <div class="bar_item"  @click="goLinkYz({name: 'tasklist', query:{idx: 4}})">
          <div class="num">{{userData.order_count_list["4"] ? userData.order_count_list["4"].count : 0}}</div>
          <div>待评价</div>
        </div>
-       <div class="bar_item line" @click="goState({name: 'tasklist', query:{idx: 3}})">
+       <div class="bar_item line" @click="goLinkYz({name: 'tasklist', query:{idx: 3}})">
          <div class="num">{{userData.order_count_list["10"] ? userData.order_count_list["10"].count : 0}}</div>
-         <div>金额异常</div>
+         <div>待追评</div>
        </div>
-       <div class="bar_item bar_icon" @click="goState({name: 'tasklist', query:{idx: 0}})">
+       <div class="bar_item bar_icon" @click="goLinkYz({name: 'tasklist', query:{idx: 0}})">
          <div><img src="../assets/mine/home-all-task.png" alt=""></div>
          <div>全部任务</div>
        </div>
      </div>
 
       <!-- 格子 -->
-     <van-grid :column-num="4" icon-size="25px" :border="false">
-       <van-grid-item @click="goState({name: v.name})" v-for="(v,i) in gridData" :key="i" :icon="v.url" :text="v.txt" />
+     <van-grid style="background-color: #fff;" :column-num="4" icon-size="25px" :border="false">
+       <van-grid-item v-show="(v.txt == '我的推广' || v.txt == '推广赚金') ? user.share_status == 1 : true" @click="goState({name: v.name})" v-for="(v,i) in gridData" :key="i" :icon="v.url" :text="v.txt" />
      </van-grid>
 
 
     <!-- 由下角人工客服 -->
-    <img class="rg_kefu" src="../assets/tabbar/home-customer-service.png" alt="">
+    <img @click="goState({name:'help'})" class="rg_kefu" src="../assets/tabbar/home-customer-service.png" alt="">
+
+    <van-overlay :show="showOver" @click="showOver = false" />
+    <div v-show="showOver" class="dialog_box">
+      <div class="dialog_title">{{userData.top_notice_info ? userData.top_notice_info.title : ''}}</div>
+      <pre class="dialog_ct" ref="wrapper">{{userData.top_notice_info.content}}</pre>
+
+      <div class="btns">
+        <van-button class="btn" type="primary" @click="showOver = false">确定</van-button>
+        <van-button class="btn" type="danger" @click="todyNo">今日不再提醒</van-button>
+      </div>
+    </div>
 
     <!-- 底部导航栏 -->
     <TabBar :active="1" />
@@ -114,12 +126,12 @@ export default {
         {
           url: require('../assets/mine/home-bind.png'),
           txt: '账号绑定',
-          name: ''
+          name: 'binuser'
         },
         {
           url: require('../assets/mine/home-feedback.png'),
-          txt: '意见反馈',
-          name: 'feedback'
+          txt: '身份验证',
+          name: 'authentication'
         },
         {
           url: require('../assets/mine/index-active-image.png'),
@@ -144,12 +156,12 @@ export default {
         {
           url: require('../assets/mine/home-appeal.png'),
           txt: '申诉中心',
-          name: ''
+          name: 'appealcenter'
         },
         {
           url: require('../assets/mine/home-version.png'),
-          txt: '版本信息',
-          name: ''
+          txt: '收款账号',
+          name: 'collectionuser'
         },
 
       ],
@@ -182,6 +194,7 @@ export default {
             "content":""
         }
       },
+      showOver: false
     }
   },
   computed: mapState([
@@ -198,6 +211,7 @@ export default {
 
     this.axios({
       headers:{
+        'Content-Type': 'application/x-www-form-urlencoded',
         "user-id": this.userInfo.user_id,
         "user-token": this.userInfo.user_token
       },
@@ -215,6 +229,14 @@ export default {
         this.changeUser(res.data.user_info)
 
         this.userData = res.data
+
+        setTimeout(() => {
+          if(res.data.top_notice_info.content){
+            this.todayShowPop()
+          }
+
+          this.$refs.wrapper.innerHTML = res.data.top_notice_info.content
+        },200)
       }else if(res.code == 9999){
         this.$router.push({name:'login'})
       }
@@ -226,6 +248,50 @@ export default {
   methods: {
 
        ...mapMutations(['changeUserInfo','changeUser']),
+
+       goLinkYz(o){
+
+         console.info(this.user)
+
+         if(this.user.id_status == 0){
+           this.$router.push({name:'authentication'})
+         }else{
+           this.$router.push(o)
+         }
+
+       },
+
+       //判断今天是否还需要显示弹窗
+       todayShowPop(){
+         let local = JSON.parse(localStorage.getItem('minePop'))
+
+         let date = new Date()
+         let year = date.getFullYear();
+         let mon = date.getMonth() + 1;
+         let day = date.getDate();
+
+         if(local){
+           let localDate = new Date(local)
+           let localYear = localDate.getFullYear();
+           let localmon = localDate.getMonth() + 1;
+           let localday = localDate.getDate();
+           if((year >= localYear) && (mon >= localmon) && (day > localday)){
+             this.showOver = true
+           }else{
+             this.showOver = false
+           }
+
+         }else{
+           this.showOver = true
+         }
+       },
+
+       //今日不再提醒
+       todyNo(){
+         this.showOver = false
+         localStorage.setItem('minePop',JSON.stringify(new Date().getTime()))
+
+       },
 
         // 复制成功
         onCopy(e){
@@ -340,6 +406,54 @@ export default {
       position: absolute;
       bottom: 54px;
       right: 0;
+    }
+
+    .dialog_box{
+      padding: 10px;
+      width: 300px;
+      overflow: hidden;
+      background: #fff;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9;
+
+      .dialog_title{
+        text-align: center;
+        font-weight: 700;
+        font-size: 16px;
+        color: #333;
+        line-height: 35px;
+        border-bottom: 0.5px solid #ccc;
+      }
+      .dialog_ct{
+        height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 10px;
+        font-size: 15px;
+        color: #333;
+        white-space:pre-wrap !important;
+        word-wrap : break-word  !important;
+
+      }
+      .btns{
+        width: 100%;
+
+        display: flex;
+        justify-content: space-between;
+
+        .btn{
+          min-width: 120px;
+          border-radius: 6px;
+        }
+      }
     }
   }
 </style>

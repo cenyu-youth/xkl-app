@@ -80,6 +80,7 @@ export default {
           margin-top: 50px;
           background: #007aff;
           border-radius: 5px;
+          border:none
         }
 
       }

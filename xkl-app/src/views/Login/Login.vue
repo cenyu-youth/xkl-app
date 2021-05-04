@@ -10,6 +10,12 @@
     <!-- 密码 -->
     <input type="password" placeholder="密码" v-model="pwd" class="inp_box">
 
+    <van-cell center title="记住账号密码">
+      <template #right-icon>
+        <van-switch v-model="checked" size="24" />
+      </template>
+    </van-cell>
+
     <van-button class="submit" @click="submit">登  陆</van-button>
 
     <!-- 底部忘记密码 -->
@@ -38,21 +44,39 @@
      },
      data(){
        return{
-         phone:18159303017,
-         pwd:'a123456',
+         // phone:18159303017,
+         // pwd:'a123456',
+         phone:'',
+         pwd:'',
          utils: new Util(this),
+
+         checked: false
        }
      },
      computed: mapState([
          'userInfo',
          'user'
      ]),
+
+     created(){
+       this.getLocal();
+     },
      methods: {
 
        ...mapMutations(['changeUserInfo','changeUser']),
 
        goState(o){
          this.$router.push(o)
+       },
+
+       getLocal(){
+         let alin = JSON.parse(localStorage.getItem('remeber'))
+
+         if(alin){
+           this.phone = alin.phone
+           this.pwd = alin.pwd,
+           this.checked = true
+         }
        },
 
        submit(){
@@ -84,27 +108,40 @@
             UserName: this.phone,
             Password: this.pwd
           })
-        }).then(res => {
-          if(res.data.code == 0){
-            this.$toast.success('登陆成功')
+        }).then(result => {
 
-            this.changeUserInfo(res.data.data.user_info)
+          let res = result.data
+
+          // console.info(res)
+          if(res.code == 0){
+            this.$toast.success('登陆成功');
+
+            if(this.checked){
+              localStorage.setItem('remeber',JSON.stringify({phone:this.phone, pwd: this.pwd}))
+            }else{
+              localStorage.removeItem('remeber')
+            }
+
+
+
+
+            this.changeUserInfo(res.data.user_info)
 
             let cookieT = JSON.stringify({
-              user_id: res.data.data.user_info.user_id,
-              user_token: res.data.data.user_info.user_token,
+              user_id: res.data.user_info.user_id,
+              user_token: res.data.user_info.user_token,
             })
 
             this.$cookies.set("userData",cookieT,"1m")
 
-            this.reqUserInfo(res.data)
+            this.reqUserInfo(res)
 
 
-            // console.info(res.data)
-          }else if(res.data.data.jumpUrl){
-            window.location.href = res.data.data.jumpUrl;
+            // console.info(res)
+          }else if(res.code != 0 && res.data && res.data.jumpUrl){
+            window.location.href = res.data.jumpUrl;
           }else{
-            this.$toast.fail(res.data.msg)
+            this.$toast.fail(res.msg)
           }
         });
        },

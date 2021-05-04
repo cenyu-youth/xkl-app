@@ -34,6 +34,8 @@
 
 <script>
   import NavBar from '@/components/NavBar.vue';
+  import qs from 'qs'
+  import { mapState, mapMutations } from 'vuex'
 
   export default {
      name: 'ChangePwd',
@@ -47,6 +49,10 @@
          rePwd: ''
        }
      },
+    computed: mapState([
+        'userInfo',
+        'user'
+    ]),
      methods: {
 
 
@@ -82,7 +88,44 @@
            return;
         }
 
-        this.$toast.success('密码更改成功')
+        this.axios({
+          headers:{
+            'Content-Type': 'application/x-www-form-urlencoded',
+            "user-id": this.userInfo.user_id,
+            "user-token": this.userInfo.user_token
+          },
+          method: 'POST',
+          url: 'http://106.12.220.193/Webapp/Login/resetPassword',
+          data: qs.stringify({
+            old_pwd: this.oldPwd,
+            new_pwd: this.pwd
+          }),
+        }).then(result => {
+
+           let res = result.data
+
+          // console.info('请求账号列表=====>',res)
+          if(res.code == 0){
+
+
+            this.$toast.success('密码更改成功')
+
+            this.delUser();
+            this.$cookies.remove('userData')
+
+            this.$router.replace({name:'login'})
+
+
+
+          }else if(res.code == 9999){
+            this.$router.push({name:'login'})
+          }else{
+
+            this.$toast(res.msg)
+          }
+        }).catch(err => {
+          console.info(err)
+        })
 
        }
      }

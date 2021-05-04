@@ -125,10 +125,85 @@ const routes = [
     name: 'tixianapply',
     component: () => import(/* webpackChunkName: "tixianapply" */ '../views/TixianApply.vue')
   },
+  {
+    path: '/taskdetail',
+    name: 'taskdetail',
+    component: () => import(/* webpackChunkName: "taskdetail" */ '../views/TaskDetail.vue')
+  },
+  {
+    path: '/appeal',
+    name: 'appeal',
+    component: () => import(/* webpackChunkName: "appeal" */ '../views/Appeal.vue')
+  },
+  {
+    path: '/appealcenter',
+    name: 'appealcenter',
+    component: () => import(/* webpackChunkName: "appealcenter" */ '../views/AppealCenter.vue')
+  },
+  {
+    path: '/appealdetail',
+    name: 'appealdetail',
+    component: () => import(/* webpackChunkName: "appealdetail" */ '../views/AppealDetail.vue')
+  },
+  {
+    path: '/collectionuser',
+    name: 'collectionuser',
+    component: () => import(/* webpackChunkName: "collectionuser" */ '../views/CollectionUser.vue')
+  },
+  {
+    path: '/addcollectionuser',
+    name: 'addcollectionuser',
+    component: () => import(/* webpackChunkName: "addcollectionuser" */ '../views/AddCollectionUser.vue')
+  },
+  {
+    path: '/certification',
+    name: 'certification',
+    component: () => import(/* webpackChunkName: "certification" */ '../views/Certification.vue')
+  },
+  {
+    path: '/binuser',
+    name: 'binuser',
+    component: () => import(/* webpackChunkName: "binuser" */ '../views/BinUser.vue')
+  },
+  {
+    path: '/addbinuser',
+    name: 'addbinuser',
+    component: () => import(/* webpackChunkName: "addbinuser" */ '../views/AddBinUser.vue')
+  },
+  {
+    path: '/authentication',
+    name: 'authentication',
+    component: () => import(/* webpackChunkName: "authentication" */ '../views/Authentication.vue')
+  },
+  {
+    path: '/receivingorders',
+    name: 'receivingorders',
+    component: () => import(/* webpackChunkName: "receivingorders" */ '../views/ReceivingOrders.vue')
+  },
+  {
+    path: '/zhifushenq',
+    name: 'zhifushenq',
+    component: () => import(/* webpackChunkName: "zhifushenq" */ '../views/ZhiFuShenQ.vue')
+  },
+  {
+    path: '/taskcaozuo',
+    name: 'taskcaozuo',
+    component: () => import(/* webpackChunkName: "taskcaozuo" */ '../views/TaskCaozuo.vue')
+  },
+  {
+    path: '/tijiaopj',
+    name: 'tijiaopj',
+    component: () => import(/* webpackChunkName: "tijiaopj" */ '../views/TijiaoPJ.vue')
+  },
+  {
+    path: '/tijiaozp',
+    name: 'tijiaozp',
+    component: () => import(/* webpackChunkName: "tijiaozp" */ '../views/TijiaoZP.vue')
+  },
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })

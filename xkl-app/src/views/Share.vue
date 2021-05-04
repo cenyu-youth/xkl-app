@@ -5,19 +5,19 @@
     <div class="banner">
       <img class="banner_bg" src="../assets/share/t-06.2c1cf4ac.jpg" alt="">
 
-      <img src="../assets/login/logo.png" alt="" class="logo">
+      <img :src="shareData.logo" alt="" class="logo">
     </div>
 
-    <div class="tit">仙客来</div>
+    <div class="tit">{{shareData.title}}</div>
 
-    <img src="../assets/share/qcode.png" alt="" class="re_code">
+    <img :src="shareData.service_qrcode" alt="" class="re_code">
 
     <van-button type="primary" class="copy_btn" size="large"
-    v-clipboard:copy="downLink"
+    v-clipboard:copy="shareData.download_url"
     v-clipboard:success="onCopy"
     v-clipboard:error="onError">点击这里复制下载链接</van-button>
     <van-button type="primary" class="copy_btn" size="large"
-    v-clipboard:copy="inviteCode"
+    v-clipboard:copy="user.invitation_code"
     v-clipboard:success="onCopy"
     v-clipboard:error="onError">点击这里复制邀请码</van-button>
 
@@ -27,6 +27,9 @@
 <script>
 
 import NavBar from '@/components/NavBar.vue';
+import { mapState, mapMutations } from 'vuex'
+
+import qs from 'qs'
 
 export default {
   name: 'Share',
@@ -35,9 +38,19 @@ export default {
   },
   data(){
     return{
-      downLink:'123',
-      inviteCode:'321'
+      downLink:'',
+      inviteCode:'',
+
+      shareData:{}
+
     }
+  },
+  computed: mapState([
+      'userInfo',
+      'user'
+  ]),
+  created(){
+    this.reqInit()
   },
   methods:{
     // 复制成功
@@ -48,6 +61,35 @@ export default {
     onError(e){
       // alert("失败");
     },
+
+    reqInit(){
+      this.axios({
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          "user-id": this.userInfo.user_id,
+          "user-token": this.userInfo.user_token
+        },
+        method: 'GET',
+        url: 'http://106.12.220.193/Webapp/home/getWebConfig',
+        data: qs.stringify({})
+      }).then(result => {
+
+         let res = result.data
+
+        console.info('报错账号信息=====>',res)
+        if(res.code == 0){
+          this.shareData = res.data
+        }else if(res.code == 9999){
+          this.$router.push({name:'login'})
+        }else{
+          this.$toast(res.msg)
+        }
+      }).catch(err => {
+        console.info(err)
+      })
+    },
+
+
   }
 }
 </script>

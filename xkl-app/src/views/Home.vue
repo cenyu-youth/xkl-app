@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <NavBar title="仙客来" :isShowMsg="true"/>
+    <NavBar :title="shareData.title" :isShowMsg="true"/>
 
     <div class="banner">
       <div class="item bor" @click="goState({name: 'capitaldetails'})">
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div class="share_box">
+    <div class="share_box" v-if="user.share_status == 1">
       <div class="share_title">分享-赚收益</div>
 
       <div class="share_wrapper">
@@ -75,7 +75,7 @@
 
       <div class="btns">
         <van-button class="btn" type="primary" @click="showOver = false">确定</van-button>
-        <van-button class="btn" type="danger">今日不再提醒</van-button>
+        <van-button class="btn" type="danger" @click="todyNo">今日不再提醒</van-button>
       </div>
     </div>
 
@@ -97,7 +97,9 @@ export default {
     TabBar
   },
   created(){
-    this.init()
+    this.init();
+    this.reqShareInit();
+
   },
   data(){
     return{
@@ -108,7 +110,8 @@ export default {
         },
         txt:''
       },
-      showOver: false
+      showOver: false,
+      shareData:''
     }
   },
   computed:mapState([
@@ -122,10 +125,69 @@ export default {
     goState(o){
       this.$router.push(o)
     },
+    reqShareInit(){
+      this.axios({
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          "user-id": this.userInfo.user_id,
+          "user-token": this.userInfo.user_token
+        },
+        method: 'GET',
+        url: 'http://106.12.220.193/Webapp/home/getWebConfig',
+        data: qs.stringify({})
+      }).then(result => {
+
+         let res = result.data
+
+        console.info('报错账号信息=====>',res)
+        if(res.code == 0){
+          this.shareData = res.data
+        }else if(res.code == 9999){
+          this.$router.push({name:'login'})
+        }else{
+          this.$toast(res.msg)
+        }
+      }).catch(err => {
+        console.info(err)
+      })
+    },
+
+    //判断今天是否还需要显示弹窗
+    todayShowPop(){
+      let local = JSON.parse(localStorage.getItem('homePop'))
+
+      let date = new Date()
+      let year = date.getFullYear();
+      let mon = date.getMonth() + 1;
+      let day = date.getDate();
+
+      if(local){
+        let localDate = new Date(local)
+        let localYear = localDate.getFullYear();
+        let localmon = localDate.getMonth() + 1;
+        let localday = localDate.getDate();
+        if((year >= localYear) && (mon >= localmon) && (day > localday)){
+          this.showOver = true
+        }else{
+          this.showOver = false
+        }
+
+      }else{
+        this.showOver = true
+      }
+    },
+
+    //今日不再提醒
+    todyNo(){
+      this.showOver = false
+      localStorage.setItem('homePop',JSON.stringify(new Date().getTime()))
+
+    },
 
     init(){
       this.axios({
         headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
           "user-id": this.userInfo.user_id,
           "user-token": this.userInfo.user_token
         },
@@ -133,6 +195,8 @@ export default {
         url: ' http://106.12.220.193/Webapp/home/index',
         data: {}
       }).then(result => {
+
+        console.info(result)
 
         let res = result.data
 
@@ -143,7 +207,7 @@ export default {
 
           setTimeout(() => {
             if(res.data.top_notice_info.content){
-              this.showOver = true
+              this.todayShowPop()
             }
 
             this.$refs.wrapper.innerHTML = this.txt
@@ -325,18 +389,17 @@ export default {
       .dialog_box{
         padding: 10px;
         width: 300px;
+        overflow: hidden;
         background: #fff;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         -webkit-border-radius: 10px;
         border-radius: 10px;
-
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 9;
-
         .dialog_title{
           text-align: center;
           font-weight: 700;
@@ -346,11 +409,15 @@ export default {
           border-bottom: 0.5px solid #ccc;
         }
         .dialog_ct{
+          width: 100%;
           height: 300px;
           overflow-y: auto;
-              padding: 10px;
-              font-size: 15px;
-              color: #333;
+          white-space:pre-wrap !important;
+          word-wrap : break-word  !important;
+          padding: 10px;
+          font-size: 15px;
+          color: #333;
+
         }
         .btns{
           width: 100%;

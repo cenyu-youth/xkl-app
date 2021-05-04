@@ -30,7 +30,14 @@ import {
   Dialog,
   Collapse,
   CollapseItem,
-  Overlay
+  Overlay,
+  Tag,
+  Picker,
+  Popup,
+  Cell,
+  CellGroup,
+  Area,
+  ImagePreview
  } from 'vant';
 Vue
   .use(Button)
@@ -49,6 +56,13 @@ Vue
   .use(Collapse)
   .use(CollapseItem)
   .use(Overlay)
+  .use(Tag)
+  .use(Picker)
+  .use(Popup)
+  .use(Cell)
+  .use(CellGroup)
+  .use(Area)
+  .use(ImagePreview)
 
 import 'lib-flexible/flexible'
 

@@ -47,6 +47,7 @@
        reqUserInfo(o){
          this.axios({
            headers:{
+             'Content-Type': 'application/x-www-form-urlencoded',
              "user-id": o.user_id,
              "user-token": o.user_token
            },
@@ -54,7 +55,7 @@
            url: 'http://106.12.220.193/Webapp/home/pushUserInfo',
            params: {}
          }).then(result => {
-           // console.info('请求个人信息1231322',result.data)
+           // console.info('请求个人信息1231322',result)
 
            let res = result.data
 

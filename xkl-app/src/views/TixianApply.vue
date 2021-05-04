@@ -1,8 +1,8 @@
 <template>
   <div class="tixian_apply">
-    <NavBar title="提现申请" :isTrueArrow="true" rtTtit="查看明细" rtPath="tixiandetail"/>
+    <NavBar title="提现申请" :isTrueArrow="true" rtTtit="" rtPath="tixiandetail"/>
 
-    <div class="tp_ct">
+    <!-- <div class="tp_ct">
       <div class="tp_title">提现说明</div>
       <div class="tp_txt">1、推广费不可提现，可核实无误，手动确认合并到保证金再申请提现</div>
       <div class="tp_txt">2、保证金可随时提现，上笔提现完成后才可继续提现</div>
@@ -46,6 +46,21 @@
 
     <van-button type="primary" size="large" class="submit_btn">提交合并</van-button>
 
+ -->
+
+    <van-cell is-link @click="goState({name:'collectionuser'})">{{xinxi.info.bank_name ? xinxi.info.bank_name : ''}} {{xinxi.info.bank_card_name ? xinxi.info.bank_card_name : ''}} (尾号{{xinxi.info.bank_last_num}})</van-cell>
+
+    <div class="inp_box">
+      <input v-model="tixain" type="text" class="money_box" placeholder="请输入提现金币">
+      <div class="tip">可提现{{xinxi.draw_config ? xinxi.draw_config.amount : 0.00}}金</div>
+    </div>
+
+    <div class="inp_box ax">
+      <div class="tip">1金=1元, {{xinxi.draw_config ? xinxi.draw_config.min : 0}}金起提, 一天只能申请1次</div>
+    </div>
+
+    <van-button type="primary" class="submit_btnss" size="large" @click="submit">提现申请</van-button>
+
 
   </div>
 </template>
@@ -53,20 +68,156 @@
 <script>
 
 import NavBar from '@/components/NavBar.vue';
-
+import qs from 'qs'
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'TixianApply',
   components: {
     NavBar
   },
+  computed: mapState([
+      'userInfo',
+      'user'
+  ]),
   data(){
     return{
       active:0,
       txPwd:'',
-      money: ''
+      money: '',
+      info:'asda',
+      xinxi:{
+        info:{
+          bank_name:''
+        }
+      },
+      tixain:''
+
+    }
+  },
+  created(){
+    if(this.$route.query.id){
+      this.reqInfo(this.$route.query.id);
+    }else{
+      this.reqInit()
     }
   },
   methods:{
+
+    ...mapMutations(['changeUserInfo','changeUser']),
+    
+    goState(o){
+      this.$router.push(o)
+    },
+
+    submit(){
+
+      if(this.tixain == ''){
+        this.$toast('请输入提现金额');
+
+        return
+      }
+
+      let config = this.xinxi.draw_config;
+      if(config.num <= 0){
+        this.$toast('今日可提款次数不足')
+        return
+      }
+
+      if(parseFloat(config.amount) < this.tixain){
+        this.$toast('提现金额超出可提现金额')
+        return
+      }
+
+      if(this.tixain < config.min){
+        this.$toast(`提现金额${config.min}金起提`)
+        return
+      }
+
+      this.axios({
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          "user-id": this.userInfo.user_id,
+          "user-token": this.userInfo.user_token
+        },
+        method: 'POST',
+        url: 'http://106.12.220.193/webapp/bill/SaveWithdrawals',
+        data: qs.stringify({
+          cashMoney:this.tixain,
+          BankId: this.xinxi.info.sign
+        })
+      }).then(result => {
+
+         let res = result.data
+
+        console.info('请求收款账号列表=====>',res)
+        if(res.code == 0){
+          this.$toast(res.msg)
+          
+          this.$router.push({name: 'capitaldetails'})
+
+        }else if(res.code == 9999){
+          this.$router.push({name:'login'})
+        }else{
+          this.$toast(res.msg)
+        }
+      }).catch(err => {
+        console.info(err)
+      })
+    },
+
+    reqInit(){
+      this.axios({
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          "user-id": this.userInfo.user_id,
+          "user-token": this.userInfo.user_token
+        },
+        method: 'POST',
+        url: 'http://106.12.220.193/webapp/bank/getList',
+        data: qs.stringify({})
+      }).then(result => {
+
+         let res = result.data
+
+        console.info('请求收款账号列表=====>',res)
+        if(res.code == 0){
+          this.reqInfo(res.data[0].sign);
+
+        }else if(res.code == 9999){
+          this.$router.push({name:'login'})
+        }
+      }).catch(err => {
+        console.info(err)
+      })
+    },
+
+    reqInfo(id){
+      this.axios({
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          "user-id": this.userInfo.user_id,
+          "user-token": this.userInfo.user_token
+        },
+        method: 'POST',
+        url: 'http://106.12.220.193/webapp/bank/getInfo',
+        data: qs.stringify({
+          sign: id
+        })
+      }).then(result => {
+
+         let res = result.data
+
+        console.info('请求收款账号列表=====>',res)
+        if(res.code == 0){
+          this.xinxi = res.data
+
+        }else if(res.code == 9999){
+          this.$router.push({name:'login'})
+        }
+      }).catch(err => {
+        console.info(err)
+      })
+    },
     changeActive(idx){
       this.active = idx;
       this.money = '';
@@ -81,7 +232,44 @@ export default {
    .tixian_apply{
       width: 100%;
       min-height: 100vh;
-      background-color: #fff;
+      background-color: #f0f0f0;
+
+      .inp_box{
+        padding: 10px 12px;
+        height: 30px;
+        line-height: 30px;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        font-size: 13px;
+        background-color: #fff;
+        color: #525252;
+
+        .money_box{
+          width: 70%;
+          border: none;
+        }
+
+        .tip{
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+
+      .ax{
+        border-top: none;
+        color: #525252;
+        font-size: 13px;
+      }
+
+      .submit_btnss{
+        border: none;
+        background-color: #1676db;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
 
       .tp_ct{
         padding: 10px;

@@ -1,6 +1,6 @@
 <template>
   <div class="capital_details">
-    <NavBar title="资金明细" :isTrueArrow="true" rtTtit="提现记录" rtPath="tixiandetail"/>
+    <NavBar title="资金明细" :isTrueArrow="true" rtTtit="" rtPath="tixiandetail"/>
 
     <van-tabs v-model="tab_a_active" title-active-color="#646566" color="transparent">
       <van-tab title="可用金币"></van-tab>
@@ -43,6 +43,8 @@
       </div>
     </div>
 
+    <div class="noList" v-if="list.length < 1">没有更多数据了</div>
+
   </div>
 </template>
 
@@ -78,22 +80,24 @@ export default {
   },
   methods:{
     change(e){
+      this.listData = []
       this.reqData(e == 0 ? 0 : e + 1, false)
     },
     reqData(type,isBt){
       console.info(type,isBt)
       this.axios({
         headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
           "user-id": this.userInfo.user_id,
           "user-token": this.userInfo.user_token
         },
         method: 'POST',
         url: 'http://106.12.220.193/Webapp/Bill/getBillList',
-        data: {
+        data: qs.stringify({
           page:isBt ? this.page : 1,
           pageSize:this.pageSize,
-          DataType:type
-        }
+          DataType:parseInt(type)
+        })
       }).then(result => {
 
         let res = result.data
@@ -215,6 +219,13 @@ export default {
                 font-size: 20px;
           }
         }
+      }
+
+      .noList{
+        color: #999;
+        line-height: 50px;
+        font-size: 15px;
+        text-align: center;
       }
    }
 

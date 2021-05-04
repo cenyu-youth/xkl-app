@@ -10,7 +10,7 @@
         <div class="subtitle">其他业务问题，点击联系在线客服</div>
         <div class="help_user">
           <img src="../assets/option/index-qq.png" class="user_icon" alt="">
-          <div class="user">客服QQ：3008217938</div>
+          <div class="user">客服QQ：{{kefu_qq}}</div>
         </div>
       </div>
     </div>
@@ -46,38 +46,25 @@
 
     <div class="ct_box" v-if="helpActive == 0">
       <van-collapse v-model="activeName" accordion>
-        <van-collapse-item title="标题1" name="1">内容</van-collapse-item>
+        <van-collapse-item v-show="v.type == 1" v-for="(v,i) in list" :key="i" :title="(i + 1) + '、'+v.title" :name="i">{{v.answer}}</van-collapse-item>
       </van-collapse>
     </div>
 
     <div class="ct_box" v-if="helpActive == 1">
       <van-collapse v-model="activeName" accordion>
-        <van-collapse-item title="标题1" name="1">内容</van-collapse-item>
-        <van-collapse-item title="标题2" name="2">内容</van-collapse-item>
+        <van-collapse-item v-show="v.type == 2" v-for="(v,i) in list" :key="i" :title="(i - 14) + '、'+v.title"  :name="i">{{v.answer}}</van-collapse-item>
       </van-collapse>
     </div>
 
     <div class="ct_box" v-if="helpActive == 2">
       <van-collapse v-model="activeName" accordion>
-        <van-collapse-item title="标题1" name="1">内容</van-collapse-item>
-        <van-collapse-item title="标题2" name="2">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
+        <van-collapse-item v-show="v.type == 3" v-for="(v,i) in list" :key="i" :title="(i - 18) + '、'+v.title"  :name="i">{{v.answer}}</van-collapse-item>
       </van-collapse>
     </div>
 
     <div class="ct_box" v-if="helpActive == 3">
       <van-collapse v-model="activeName" accordion>
-        <van-collapse-item title="标题1" name="1">内容</van-collapse-item>
-        <van-collapse-item title="标题2" name="2">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
-        <van-collapse-item title="标题3" name="3">内容</van-collapse-item>
+        <van-collapse-item v-show="v.type == 4" v-for="(v,i) in list" :key="i" :title="(i - 22) + '、'+v.title"  :name="i">{{v.answer}}</van-collapse-item>
       </van-collapse>
     </div>
   </div>
@@ -87,18 +74,58 @@
 
 import NavBar from '@/components/NavBar.vue';
 
+
+import qs from 'qs'
+
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'Help',
   components: {
     NavBar
   },
+  computed: mapState([
+      'userInfo',
+      'user'
+  ]),
   data(){
     return{
       activeName:0,
-      helpActive:0
+      helpActive:0,
+      kefu_qq:'',
+      list:[]
     }
   },
+  created(){
+    this.axios({
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded',
+          "user-id": this.userInfo.user_id,
+          "user-token": this.userInfo.user_token
+        },
+        method: 'POST',
+        url: 'http://106.12.220.193/webapp/QA/getList',
+        data: qs.stringify({})
+      }).then(result => {
+
+         let res = result.data
+
+        console.info('提交申诉=====>',res)
+        if(res.code == 0){
+          this.kefu_qq = res.data.kefu_qq;
+
+          this.list = res.data.qa_list
+        }else if(res.code == 9999){
+          this.$router.push({name:'login'})
+        }else{
+          this.$toast(res.msg)
+        }
+      }).catch(err => {
+        console.info(err)
+      })
+  },
   methods:{
+
+    ...mapMutations(['changeUserInfo','changeUser']),
     changeHelp(idx){
       this.helpActive = idx
     }
